@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <div className="fixed w-full h-[80px] flex justify-between items-center px-4 bg-[#00539CFF] text-[#FFD662FF]">
       <div>
-        <img src={logo} alt="logo image" style={{ width: "50px" }} />
+        <img src={logo} alt="logo" style={{ width: "50px" }} />
       </div>
       {/* menu */}
       <ul className="hidden md:flex">
