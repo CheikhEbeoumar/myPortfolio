@@ -13,6 +13,9 @@
     }
     
 }
+body{
+    font-family:'Raleway';
+}
 .content-div {
     background-repeat: no-repeat;
     background-size:cover;
