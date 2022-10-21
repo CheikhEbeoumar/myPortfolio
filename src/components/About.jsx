@@ -14,7 +14,7 @@ const About = () => {
         </div>
         <div className='max-w-[1000px] w-full grid sm:grid-cols-2 gap-8 px-4'>
           <div className='sm:text-right text-4xl font-bold'>
-            <img  className="w-[200px] lg:mx-[70%] md:mx-[60%] " src={me}/>
+            <img  className="w-[200px] lg:mx-[70%] md:mx-[60%] " src={me} alt="me"/>
           </div>
           <div>
             <p className="lg:mx-10">I am passionate about building excellent software that improves

@@ -18,32 +18,32 @@ const Skills = () => {
         </div>
         <div className="w-full grid sm:grid-cols-3 gap-4 text-center py-8">
           <div className="shadow-md shadow-[#121211] hover:scale-110 duration-500">
-            <img className="w-20 mx-auto" src={html} />
+            <img className="w-20 mx-auto" src={html} alt="html" />
             <p className="my-4">HTML</p>
           </div>
 
           <div className="shadow-md shadow-[#121211] hover:scale-110 duration-500">
-            <img className="w-20 mx-auto" src={css} />
+            <img className="w-20 mx-auto" src={css} alt="css" />
             <p className="my-4">CSS</p>
           </div>
 
           <div className="shadow-md shadow-[#121211] hover:scale-110 duration-500">
-            <img className="w-20 mx-auto" src={js} />
+            <img className="w-20 mx-auto" src={js} alt="js"/>
             <p className="my-4">JAVASCRIPT</p>
           </div>
 
           <div className="shadow-md shadow-[#121211] hover:scale-110 duration-500">
-            <img className="w-20 mx-auto" src={react} />
+            <img className="w-20 mx-auto" src={react} alt="react"/>
             <p className="my-4">REACT</p>
           </div>
 
           <div className="shadow-md shadow-[#121211] hover:scale-110 duration-500">
-            <img className="w-20 mx-auto" src={python} />
+            <img className="w-20 mx-auto" src={python} alt="python"/>
             <p className="my-4">PYTHON</p>
           </div>
 
           <div className="shadow-md shadow-[#121211] hover:scale-110 duration-500">
-            <img className="w-20 mx-auto" src={django} />
+            <img className="w-20 mx-auto" src={django}  alt="django"/>
             <p className="my-4">DJANGO</p>
           </div>
 
