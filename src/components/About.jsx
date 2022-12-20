@@ -17,11 +17,8 @@ const About = () => {
             <img  className="w-[200px] lg:mx-[70%] md:mx-[60%] " src={me} alt="me"/>
           </div>
           <div>
-            <p className="lg:mx-10">I am passionate about building excellent software that improves
-            the lives of those around me. I specialize in creating software
-            for clients ranging from individuals and small-businesses all the
-            way to large enterprise corporations. What would you do if you had
-            a software expert available at your fingertips?</p>  
+            <p className="lg:mx-10">I am software developer with 2 years of experience i am passionate about building excellent software that improves
+            the lives of those around me. i enjoy solving problems researching, designing software applications and learnig new technologies.</p>  
           </div>
         </div>
     </div>
