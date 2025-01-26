@@ -11,7 +11,7 @@ const Home = () => {
           Cheikh Beoumar
         </h1>
         <h2 className="text-4xl sm:text-7xl font-bold text-[#8892B0]">
-          I'm a full-stack Developer & Designer
+          I'm a full-stack Developer
         </h2>
         <p className="text-[#8892B0] py-4 mx-w-[700px]">
           I’m a full-stack developer specializing in building (and occasionally
