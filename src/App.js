@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import mee from "./assets/mee.jpg";
+import mee from "./assets/meee.jpg";
 // Intersection Observer Hook for animations
 const useInView = (options = {}) => {
   const [ref, setRef] = useState();
@@ -113,12 +113,6 @@ const PersonImage = () => (
   </div>
 );
 
-const ProjectImage = ({ title }) => (
-  <div className="w-full h-48 bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg flex items-center justify-center text-white font-semibold">
-    {title}
-  </div>
-);
-
 // Navbar Component
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -209,17 +203,69 @@ const Navbar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </a>
-          <a
-            href="#"
+          <button
             className="w-40 h-14 flex justify-between items-center ml-[-120px] hover:ml-[-10px] transition-all duration-300 bg-emerald-600 text-white px-4 rounded-r-lg group"
           >
             <span className="group-hover:text-white">Resume</span>
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Particle Animation Component
+const ParticleBackground = () => {
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const particleCount = 50;
+    const newParticles = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+      newParticles.push({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 4 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.5 + 0.2,
+      });
+    }
+    setParticles(newParticles);
+
+    const animateParticles = () => {
+      setParticles(prev => prev.map(particle => ({
+        ...particle,
+        x: (particle.x + particle.speedX + 100) % 100,
+        y: (particle.y + particle.speedY + 100) % 100,
+      })));
+    };
+
+    const interval = setInterval(animateParticles, 50);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {particles.map(particle => (
+        <div
+          key={particle.id}
+          className="absolute bg-emerald-400 rounded-full animate-pulse"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+            width: `${particle.size}px`,
+            height: `${particle.size}px`,
+            opacity: particle.opacity,
+            animation: `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`,
+          }}
+        />
+      ))}
     </div>
   );
 };
@@ -227,10 +273,21 @@ const Navbar = () => {
 // Home Component
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const typewriterText = useTypewriter("I'm a Full-Stack Developer", 150);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const scrollToWork = () => {
@@ -239,45 +296,68 @@ const Home = () => {
 
   return (
     <div id="home" className="w-full h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden">
+      {/* Particle Background */}
+      <ParticleBackground />
+      
+      {/* Interactive Mouse Follower */}
+      <div 
+        className="absolute w-96 h-96 bg-gradient-radial from-emerald-400/20 to-transparent rounded-full blur-3xl pointer-events-none transition-all duration-700 ease-out"
+        style={{
+          left: `${mousePosition.x}%`,
+          top: `${mousePosition.y}%`,
+          transform: 'translate(-50%, -50%)',
+        }}
+      />
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <FloatingElement delay={0}>
-          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400/10 rounded-full blur-xl animate-pulse-slow"></div>
         </FloatingElement>
         <FloatingElement delay={2000}>
-          <div className="absolute top-40 right-10 w-96 h-96 bg-cyan-400/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-40 right-10 w-96 h-96 bg-cyan-400/10 rounded-full blur-xl animate-pulse-slow"></div>
         </FloatingElement>
         <FloatingElement delay={4000}>
-          <div className="absolute bottom-20 left-1/2 w-64 h-64 bg-emerald-600/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-20 left-1/2 w-64 h-64 bg-emerald-600/10 rounded-full blur-xl animate-pulse-slow"></div>
         </FloatingElement>
+        
+        {/* Geometric Shapes */}
+        <div className="absolute top-1/4 left-1/4 w-32 h-32 border-2 border-emerald-400/20 rotate-45 animate-spin-very-slow"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-24 h-24 border-2 border-cyan-400/20 animate-bounce-gentle"></div>
+        <div className="absolute top-1/2 right-1/3 w-16 h-16 bg-gradient-to-r from-emerald-400/10 to-cyan-400/10 rounded-lg animate-pulse-slow transform rotate-12"></div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 flex flex-col justify-center h-full relative z-10">
         <div className="space-y-6">
           <p className={`text-emerald-400 text-lg font-medium transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Hi, my name is
+            <span className="inline-block animate-wave">👋</span> Hi, my name is
           </p>
-          <h1 className={`text-5xl lg:text-7xl font-bold text-white transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'}`}>
-            Cheikh Ebeoumar
+          <h1 className={`text-5xl lg:text-7xl font-bold bg-gradient-to-r from-white via-emerald-400 to-cyan-400 bg-clip-text text-transparent transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'}`}>
+            <span className="inline-block hover:scale-110 hover:rotate-3 transition-transform duration-300 cursor-default">Cheikh</span>{' '}
+            <span className="inline-block hover:scale-110 hover:rotate-3 transition-transform duration-300 cursor-default">Ebeoumar</span>
           </h1>
           <h2 className={`text-4xl lg:text-6xl font-bold text-slate-400 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}>
-            <span className="inline-block min-h-[1.2em]">
-              {typewriterText}
-              <span className="animate-pulse">|</span>
+            <span className="inline-block min-h-[1.2em] relative">
+              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                {typewriterText}
+              </span>
+              <span className="animate-blink text-emerald-400">|</span>
+              <div className="absolute -top-2 -right-8 text-2xl animate-bounce-gentle">✨</div>
             </span>
           </h2>
           <p className={`text-slate-300 text-lg max-w-3xl leading-relaxed transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Full-Stack Developer with 2+ years of experience building modern web applications using Python, Django, React, and MongoDB. 
+            <span className="inline-block animate-glow">🚀</span> Full-Stack Developer with 2+ years of experience building modern web applications using Python, Django, React, and MongoDB. 
             Currently pursuing Master's in Software Engineering at ITMO University. Passionate about creating scalable solutions and 
             delivering exceptional digital experiences.
           </p>
           <div className={`pt-4 transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
             <button
               onClick={scrollToWork}
-              className="group bg-transparent border-2 border-emerald-400 text-emerald-400 px-8 py-4 rounded-lg hover:bg-emerald-400 hover:text-slate-900 hover:scale-105 hover:shadow-lg hover:shadow-emerald-400/25 transition-all duration-300 flex items-center space-x-2 font-medium animate-bounce-gentle"
+              className="group relative bg-gradient-to-r from-emerald-500 to-cyan-500 text-white px-8 py-4 rounded-lg hover:from-emerald-400 hover:to-cyan-400 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-400/50 transition-all duration-300 flex items-center space-x-2 font-medium overflow-hidden"
             >
-              <span>View My Work</span>
-              <svg className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
+              <span className="relative z-10">View My Work</span>
+              <svg className="relative z-10 w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
             </button>
@@ -285,10 +365,14 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-emerald-400 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-emerald-400 rounded-full mt-2 animate-pulse"></div>
+      {/* Enhanced Scroll indicator with animation */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2">
+        <span className="text-emerald-400 text-sm font-medium animate-pulse">Scroll down</span>
+        <div className="relative">
+          <div className="w-6 h-10 border-2 border-emerald-400 rounded-full flex justify-center overflow-hidden">
+            <div className="w-1 h-3 bg-emerald-400 rounded-full mt-2 animate-scroll-down"></div>
+          </div>
+          <div className="absolute -top-2 -left-2 w-10 h-14 border-2 border-cyan-400/30 rounded-full animate-ping"></div>
         </div>
       </div>
     </div>
@@ -300,48 +384,77 @@ const About = () => {
   const [aboutRef, aboutInView] = useInView();
 
   return (
-    <div id="about" className="w-full min-h-screen bg-slate-50 py-20">
-      <div className="max-w-6xl mx-auto px-6" ref={aboutRef}>
+    <div id="about" className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 py-20 relative overflow-hidden">
+      {/* Animated Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 left-0 w-full h-full" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          animation: 'float 10s ease-in-out infinite'
+        }}></div>
+      </div>
+      
+      <div className="max-w-6xl mx-auto px-6 relative z-10" ref={aboutRef}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className={`text-4xl lg:text-5xl font-bold text-slate-900 mb-8 transition-all duration-1000 ${aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-20'}`}>
-              About <span className="text-emerald-600">Me</span>
+              About <span className="bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent relative">
+                Me
+                <div className="absolute -top-2 -right-8 text-2xl animate-bounce-gentle">🎯</div>
+              </span>
             </h2>
             <div className="space-y-6 text-slate-700 text-lg leading-relaxed">
               <p className={`transition-all duration-1000 delay-300 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                <span className="inline-block animate-glow mr-2">🚀</span>
                 I am a passionate Full-Stack Developer with 2+ years of experience in building modern web applications. 
                 Currently pursuing my Master's degree in Software Engineering at ITMO University in Saint Petersburg, Russia.
               </p>
               <p className={`transition-all duration-1000 delay-500 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                <span className="inline-block animate-glow mr-2">💡</span>
                 I specialize in creating scalable solutions using cutting-edge technologies like Python, Django, React, and MongoDB. 
                 My experience includes developing management systems that improved data processing efficiency by 30% and building 
                 responsive applications serving 100+ daily users.
               </p>
               <p className={`transition-all duration-1000 delay-700 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                <span className="inline-block animate-glow mr-2">⚡</span>
                 I'm passionate about solving complex problems, researching new technologies, and designing software applications 
                 that improve people's lives. I thrive in collaborative environments and enjoy the challenge of turning ideas into reality.
               </p>
             </div>
             <div className="mt-8 grid grid-cols-2 gap-6">
-              <div className={`bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-500 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '900ms'}}>
-                <h3 className="font-bold text-emerald-600 text-2xl">
-                  <AnimatedCounter end={2} inView={aboutInView} />+
-                </h3>
-                <p className="text-slate-600">Years Experience</p>
+              <div className={`group bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 border-l-4 border-emerald-500 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '900ms'}}>
+                <div className="flex items-center space-x-3">
+                  <div className="text-3xl animate-bounce-gentle">⏱️</div>
+                  <div>
+                    <h3 className="font-bold text-emerald-600 text-2xl group-hover:scale-110 transition-transform duration-300">
+                      <AnimatedCounter end={2} inView={aboutInView} />+
+                    </h3>
+                    <p className="text-slate-600">Years Experience</p>
+                  </div>
+                </div>
               </div>
-              <div className={`bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-500 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '1100ms'}}>
-                <h3 className="font-bold text-emerald-600 text-2xl">
-                  <AnimatedCounter end={10} inView={aboutInView} />+
-                </h3>
-                <p className="text-slate-600">Projects Completed</p>
+              <div className={`group bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 border-l-4 border-cyan-500 ${aboutInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '1100ms'}}>
+                <div className="flex items-center space-x-3">
+                  <div className="text-3xl animate-bounce-gentle">🚀</div>
+                  <div>
+                    <h3 className="font-bold text-cyan-600 text-2xl group-hover:scale-110 transition-transform duration-300">
+                      <AnimatedCounter end={10} inView={aboutInView} />+
+                    </h3>
+                    <p className="text-slate-600">Projects Completed</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div className={`flex justify-center lg:justify-end transition-all duration-1000 ${aboutInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'}`}>
             <FloatingElement>
-              <div className="relative">
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-pulse-slow"></div>
                 <PersonImage />
                 <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400/20 to-cyan-400/20 rounded-full animate-pulse"></div>
+                {/* Floating Icons */}
+                <div className="absolute -top-4 -right-4 text-2xl animate-bounce-gentle">💻</div>
+                <div className="absolute -bottom-2 -left-4 text-2xl animate-bounce-gentle" style={{animationDelay: '1s'}}>⚡</div>
+                <div className="absolute top-1/2 -right-8 text-2xl animate-bounce-gentle" style={{animationDelay: '2s'}}>🎨</div>
               </div>
             </FloatingElement>
           </div>
@@ -457,6 +570,9 @@ const Skills = () => {
 
 // Work Component
 const Work = () => {
+  const [workRef, workInView] = useInView();
+  const [hoveredProject, setHoveredProject] = useState(null);
+
   const projects = [
     {
       title: "General Social Registry System",
@@ -464,7 +580,9 @@ const Work = () => {
       tech: ["Python", "Next.js", "React", "MongoDB", "REST API"],
       demo: "#",
       github: "#",
-      company: "BTIKAR TECH"
+      company: "BTIKAR TECH",
+      icon: "🏢",
+      gradient: "from-blue-500 to-purple-600"
     },
     {
       title: "Clinic Management System",
@@ -472,71 +590,137 @@ const Work = () => {
       tech: ["Python", "Django", "JavaScript", "Bootstrap"],
       demo: "#",
       github: "#",
-      company: "SMART MS"
+      company: "SMART MS",
+      icon: "🏥",
+      gradient: "from-green-500 to-teal-600"
     },
     {
       title: "Todo List Application",
       description: "A modern React-based todo application with real-time updates and responsive design.",
       tech: ["React", "JavaScript", "CSS"],
       demo: "https://incomparable-stroopwafel-46884a.netlify.app/",
-      github: "#"
+      github: "#",
+      icon: "✅",
+      gradient: "from-orange-500 to-red-600"
     },
     {
       title: "Portfolio Website",
       description: "Personal portfolio website showcasing projects and skills with modern design and smooth animations.",
       tech: ["React", "Tailwind CSS", "JavaScript"],
       demo: "https://resplendent-tanuki-3de660.netlify.app/",
-      github: "#"
+      github: "#",
+      icon: "🎨",
+      gradient: "from-pink-500 to-rose-600"
     }
   ];
 
   return (
-    <div id="work" className="w-full min-h-screen bg-slate-50 py-20">
-      <div className="max-w-6xl mx-auto px-6">
+    <div id="work" className="w-full min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 py-20 relative overflow-hidden" ref={workRef}>
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0">
+        <FloatingElement delay={1000}>
+          <div className="absolute top-20 right-20 w-64 h-64 border border-emerald-400/10 rounded-full animate-spin-very-slow"></div>
+        </FloatingElement>
+        <FloatingElement delay={3000}>
+          <div className="absolute bottom-20 left-20 w-48 h-48 border border-cyan-400/10 rounded-full animate-spin-slow-reverse"></div>
+        </FloatingElement>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-4">
-            Featured <span className="text-emerald-600">Work</span>
+          <h2 className={`text-4xl lg:text-5xl font-bold text-slate-900 mb-4 transition-all duration-1000 ${workInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            Featured <span className="bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent relative">
+              Work
+              <div className="absolute -top-2 -right-8 text-2xl animate-bounce-gentle">🚀</div>
+            </span>
           </h2>
-          <p className="text-slate-700 text-lg">Some of my recent projects and achievements</p>
+          <p className={`text-slate-700 text-lg transition-all duration-1000 delay-300 ${workInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            Some of my recent projects and achievements
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <div key={index} className="group bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-              <div className="relative overflow-hidden">
-                <ProjectImage title={project.title} />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                  <div className="flex space-x-4">
+            <div 
+              key={index} 
+              className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-slate-200 hover:border-emerald-300 hover:scale-105 ${workInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
+              style={{ transitionDelay: `${index * 200}ms` }}
+              onMouseEnter={() => setHoveredProject(index)}
+              onMouseLeave={() => setHoveredProject(null)}
+            >
+              {/* Animated gradient overlay */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+              
+              {/* Project icon floating animation */}
+              <div className="absolute top-4 right-4 text-4xl animate-float">
+                {project.icon}
+              </div>
+              
+              <div className="relative overflow-hidden h-48 bg-gradient-to-br from-slate-100 to-slate-200">
+                <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-20`}></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-6xl mb-2 animate-bounce-gentle">{project.icon}</div>
+                    <div className="text-slate-700 font-bold text-xl">{project.title}</div>
+                  </div>
+                </div>
+                
+                {/* Hover overlay with buttons */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-6`}>
+                  <div className="flex space-x-4 transform translate-y-10 group-hover:translate-y-0 transition-transform duration-300 delay-100">
                     <a
                       href={project.demo}
-                      className="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors duration-300"
+                      className="bg-emerald-500 text-white px-6 py-2 rounded-full hover:bg-emerald-600 transition-colors duration-300 font-medium shadow-lg hover:shadow-emerald-500/50 hover:scale-110 transform"
                     >
-                      Live Demo
+                      <span className="flex items-center space-x-2">
+                        <span>Live Demo</span>
+                        <span>🚀</span>
+                      </span>
                     </a>
                     <a
                       href={project.github}
-                      className="bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors duration-300"
+                      className="bg-slate-700 text-white px-6 py-2 rounded-full hover:bg-slate-800 transition-colors duration-300 font-medium shadow-lg hover:shadow-slate-500/50 hover:scale-110 transform"
                     >
-                      GitHub
+                      <span className="flex items-center space-x-2">
+                        <span>GitHub</span>
+                        <span>💻</span>
+                      </span>
                     </a>
                   </div>
                 </div>
               </div>
-              <div className="p-6">
+
+              <div className="p-6 relative">
                 {project.company && (
-                  <span className="text-emerald-600 text-sm font-medium">{project.company}</span>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <span className="text-emerald-600 text-sm font-bold bg-emerald-50 px-3 py-1 rounded-full">
+                      {project.company}
+                    </span>
+                    <div className="text-emerald-500 animate-pulse">✨</div>
+                  </div>
                 )}
-                <h3 className="text-xl font-bold text-slate-900 mb-3 mt-1">{project.title}</h3>
-                <p className="text-slate-600 mb-4">{project.description}</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors duration-300">
+                  {project.title}
+                </h3>
+                <p className="text-slate-600 mb-6 leading-relaxed">
+                  {project.description}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {project.tech.map((tech, techIndex) => (
                     <span
                       key={techIndex}
-                      className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm"
+                      className={`bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-gradient-to-r hover:${project.gradient} hover:text-white transition-all duration-300 cursor-default transform hover:scale-110`}
                     >
                       {tech}
                     </span>
                   ))}
+                </div>
+                
+                {/* Progress indicator */}
+                <div className="mt-4 w-full bg-slate-200 rounded-full h-1 overflow-hidden">
+                  <div 
+                    className={`h-1 bg-gradient-to-r ${project.gradient} transition-all duration-1000 ease-out ${hoveredProject === index ? 'w-full' : 'w-0'}`}
+                  ></div>
                 </div>
               </div>
             </div>
@@ -808,6 +992,48 @@ function App() {
           to { transform: rotate(0deg); }
         }
         
+        @keyframes spin-very-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        
+        @keyframes wave {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(20deg); }
+          75% { transform: rotate(-10deg); }
+        }
+        
+        @keyframes glow {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.1); }
+        }
+        
+        @keyframes blink {
+          0%, 50% { opacity: 1; }
+          51%, 100% { opacity: 0; }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 1; }
+        }
+        
+        @keyframes scroll-down {
+          0% { transform: translateY(0); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateY(15px); opacity: 0; }
+        }
+        
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes gradient-shift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        
         .animate-float {
           animation: float 6s ease-in-out infinite;
         }
@@ -824,8 +1050,41 @@ function App() {
           animation: spin-slow-reverse 25s linear infinite;
         }
         
+        .animate-spin-very-slow {
+          animation: spin-very-slow 30s linear infinite;
+        }
+        
+        .animate-wave {
+          animation: wave 2s ease-in-out infinite;
+        }
+        
+        .animate-glow {
+          animation: glow 2s ease-in-out infinite;
+        }
+        
+        .animate-blink {
+          animation: blink 1s step-end infinite;
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 3s ease-in-out infinite;
+        }
+        
+        .animate-scroll-down {
+          animation: scroll-down 2s ease-in-out infinite;
+        }
+        
         .scale-102 {
           transform: scale(1.02);
+        }
+        
+        .bg-gradient-radial {
+          background: radial-gradient(circle, var(--tw-gradient-stops));
+        }
+        
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradient-shift 3s ease infinite;
         }
         
         /* Custom scrollbar */
@@ -838,12 +1097,29 @@ function App() {
         }
         
         ::-webkit-scrollbar-thumb {
-          background: #10b981;
+          background: linear-gradient(45deg, #10b981, #06b6d4);
           border-radius: 4px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
-          background: #059669;
+          background: linear-gradient(45deg, #059669, #0891b2);
+        }
+        
+        /* Enhanced hover effects */
+        .group:hover .group-hover\\:animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Smooth transitions */
+        * {
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
       `}</style>
     </div>
