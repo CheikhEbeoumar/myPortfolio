@@ -1,32 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('http://fonts.cdnfonts.com/css/raleway-5');
-@layer base {
-    body{
-    @apply font-[raleway]
-    }
-    li{
-        @apply px-4;
-        @apply cursor-pointer;
-    }
-    
-}
-body{
-    font-family:'Raleway';
-}
-.content-div {
-    background-repeat: no-repeat;
-    background-size:cover;
-    background-position:center;
-    height: 250px;
 
+@layer base {
+  body {
+    @apply bg-brutal-cream text-black font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-black text-brutal-yellow;
+  }
+
+  li {
+    @apply cursor-pointer;
+  }
 }
-.content-div:hover{
-background-image:linear-gradient(
-    to right,
-    rgba(229, 227, 81, 0.8),
-    hsla(245, 67%, 57%, 0.8)  
-)!important;
+
+@layer components {
+  /* Chunky bordered surface */
+  .brutal-card {
+    @apply bg-white border-3 border-black shadow-brutal;
+  }
+
+  /* Interactive press effect: shadow shrinks + card shifts toward shadow */
+  .brutal-press {
+    @apply transition-all duration-150 ease-out;
+  }
+  .brutal-press:hover {
+    @apply translate-x-[3px] translate-y-[3px] shadow-brutal-sm;
+  }
+  .brutal-press:active {
+    @apply translate-x-[6px] translate-y-[6px] shadow-none;
+  }
+
+  .brutal-tag {
+    @apply inline-block border-2 border-black px-3 py-1 text-xs font-bold uppercase tracking-wide;
+  }
+}
+
+/* Halftone / dotted background pattern */
+.bg-dots {
+  background-image: radial-gradient(#00000022 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(#00000010 1px, transparent 1px),
+    linear-gradient(90deg, #00000010 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Marquee strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(-2deg); }
+}
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 14s linear infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: #FFFDF0;
+  border-left: 3px solid #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFDE00;
+  border: 3px solid #000;
 }
